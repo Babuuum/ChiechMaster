@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List
 from sqlalchemy import Integer, String, DateTime, TEXT, BOOLEAN, ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -13,7 +13,10 @@ class League(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
-    start_league_date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow())
+    start_league_date: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
 
     format: Mapped[LeagueFormat] = mapped_column(
         SQLEnum(LeagueFormat),

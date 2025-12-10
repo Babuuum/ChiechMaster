@@ -18,11 +18,20 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 from app.core.db.base import Base
-
-from app.core.db.models.user import User
-from app.core.db.models.chiech_master import League, BigGoals, Goals
-from app.core.db.models.chiech_daily import BadHabits, BadHabitStats, Meds, Tasks
-from app.core.db.models.chiech_database import Roadmap, Classes, Notes, Information
+from app.core.db.models import (
+    User,
+    League,
+    BigGoals,
+    Goals,
+    BadHabits,
+    BadHabitStats,
+    Meds,
+    Tasks,
+    Roadmap,
+    Classes,
+    Notes,
+    Information,
+)
 
 target_metadata = Base.metadata
 

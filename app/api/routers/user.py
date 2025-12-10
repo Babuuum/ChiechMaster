@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from app.core.db.models.models import User
 from sqlalchemy import select
 
+from app.core.db.models import User
 from app.core.db.session import get_session
 
 router = APIRouter(tags=['/user'])

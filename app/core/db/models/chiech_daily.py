@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List
 from sqlalchemy import Integer, String, DateTime, TEXT, BOOLEAN, ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -27,7 +27,10 @@ class BadHabitStats(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     daily_report: Mapped[str] = mapped_column(String, nullable=False)
     bad_habit_id: Mapped[int] = mapped_column(ForeignKey('bad_habits.id'))
-    date: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    date: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
 
     bad_habit: Mapped["BadHabits"] = relationship(back_populates='bad_habit_stats')
 
@@ -56,5 +59,6 @@ class Tasks(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     tag: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     user: Mapped["User"] = relationship(back_populates='tasks')

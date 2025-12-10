@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import Optional, List
+from datetime import datetime, timezone
+from typing import List
 from sqlalchemy import Integer, String, DateTime
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from app.core.db.base import Base
@@ -11,7 +11,10 @@ class User(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     tg_id: Mapped[int] = mapped_column(Integer, nullable=False)
     tg_nickname: Mapped[str] = mapped_column(String, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
 
     notes: Mapped[List["Notes"]] = relationship(back_populates='user')
     information: Mapped[List["Information"]] = relationship(back_populates='user')
