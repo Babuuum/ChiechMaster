@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from email.policy import default
 from typing import Optional, List
 from sqlalchemy import Integer, String, DateTime, TEXT, BOOLEAN, ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -59,6 +60,7 @@ class Tasks(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     tag: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    completed: Mapped[bool] = mapped_column(BOOLEAN, default=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
 
     user: Mapped["User"] = relationship(back_populates='tasks')

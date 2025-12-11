@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import List
-from sqlalchemy import Integer, String, DateTime
+from sqlalchemy import Integer, String, DateTime, BOOLEAN
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from app.core.db.base import Base
 
@@ -15,6 +15,7 @@ class User(Base):
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
     )
+    is_active: Mapped[bool] = mapped_column(BOOLEAN, default=True)
 
     notes: Mapped[List["Notes"]] = relationship(back_populates='user')
     information: Mapped[List["Information"]] = relationship(back_populates='user')

@@ -13,6 +13,9 @@ class League(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
+    active: Mapped[bool] = mapped_column(BOOLEAN, default=False)
+    ended: Mapped[bool] = mapped_column(BOOLEAN, default=False)
+
     start_league_date: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
@@ -40,6 +43,7 @@ class BigGoals(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(TEXT, nullable=True)
+    completed: Mapped[bool] = mapped_column(BOOLEAN, default=False)
 
     goals: Mapped[List["Goals"]] = relationship(back_populates='big_goals')
 
@@ -61,6 +65,7 @@ class Goals(Base):
     big_goal_id: Mapped[int] = mapped_column(ForeignKey("big_goals.id"))
     description: Mapped[Optional[str]] = mapped_column(TEXT, nullable=True)
     usual: Mapped[Optional[bool]] = mapped_column(BOOLEAN, nullable=True)
+    completed: Mapped[bool] = mapped_column(BOOLEAN, default=False)
 
     big_goals: Mapped['BigGoals'] = relationship(back_populates='goals')
 
