@@ -43,7 +43,7 @@ async def create_user(session: SessionDep, user_data=UserCreate):
     return user
 
 @router.patch('/activate')
-async def deactivate_user(
+async def activate_user(
     user_data: UserActivate,
     session: SessionDep
 ):

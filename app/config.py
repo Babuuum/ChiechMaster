@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     PROD_DB_PORT: str = ""
 
     # TG
-    TELEGRAM_BOT_RELEASE_TOKEN: str = ""
+    TELEGRAM_BOT_TOKEN: str = ""
     TELEGRAM_BOT_SECRET_TOKEN: str = ""
 
     @computed_field

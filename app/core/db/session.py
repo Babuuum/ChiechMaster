@@ -22,8 +22,13 @@ async_session: async_sessionmaker[AsyncSession] = async_sessionmaker(
 )
 
 
-async def get_session() -> AsyncGenerator[AsyncSession, None]:
+async def get_session() -> AsyncGenerator[AsyncSession, None]: #для работы с fast_api
     async with async_session() as session:
         yield session
 
 SessionDep =  Annotated[AsyncSession, Depends(get_session)]
+
+async def get_db_session() -> AsyncSession: #для работы вне fast_api
+    async with async_session() as session:
+        async with session.begin():
+            yield session
