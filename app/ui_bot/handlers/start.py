@@ -3,7 +3,7 @@ from aiogram import Router
 from aiogram.types import Message
 
 from app.core.db.session import async_session
-from app.core.services.user import UserService
+from app.core.services.user_db_services import UserService
 
 router = Router()
 
