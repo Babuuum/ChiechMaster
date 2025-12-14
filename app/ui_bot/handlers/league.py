@@ -11,45 +11,26 @@ router = Router()
 
 @router.message(Command('chiech_master'))
 async def cmd_chiech_master(message: Message):
-    session = async_session()
 
-    try:
-        async with session.begin():
-            # Получаем лигу
-            league = await LeagueServices.get_actual_leagues(session)
+    leagues_list = LeagueServices
 
-            if not league:
-                await message.answer("Активная лига не найдена.")
-                return
+    for league in leagues_list:
+        if not league:
+            await message.answer("Активная лига не найдена.")
 
-            # Получаем цели и большие цели для лиги
-            # В зависимости от вашей реализации сервисов, вам может понадобиться:
-            # 1. Либо цели уже загружены в league.goals и league.big_goals
-            # 2. Либо нужно загрузить их отдельно
 
-            # Пример, если нужно загрузить отдельно:
-            # league_goals = await LeagueServices.get_league_goals(session, league.id)
-            # league_big_goals = await LeagueServices.get_league_big_goals(session, league.id)
+        formatted_message = format_chiech_master_message(
+            league.league_name,
+            league.legue_goals,
+            league.league_big_goals
+        )
 
-            # Если цели уже в объекте league:
-            league_goals = league.goals
-            league_big_goals = league.big_goals
+        await message.answer(
+            formatted_message,
+            parse_mode="HTML"
+        )
 
-            # Форматируем сообщение
-            formatted_message = format_chiech_master_message(
-                league,
-                league_goals,
-                league_big_goals
-            )
 
-            # Отправляем сообщение
-            await message.answer(
-                formatted_message,
-                parse_mode="HTML"  # Используем HTML вместо Markdown для цветов
-            )
-
-    except Exception as e:
-        await message.answer(f"Произошла ошибка: {str(e)}")
-        raise
-    finally:
-        await session.close()
+#sdelat' toje samoe dl9 usera
+#potestit' s real'nimi dannimi
+#sdelat' refactoring

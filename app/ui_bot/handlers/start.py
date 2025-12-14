@@ -13,11 +13,9 @@ async def cmd_start(message: Message):
     user_tg_id = message.from_user.id
     username = message.from_user.username or f"user_{user_tg_id}"
 
-    # Создаем сессию через async_session (это async_sessionmaker)
     session = async_session()
 
     try:
-        # Начинаем транзакцию
         async with session.begin():
             user = await UserService.get_or_create_user(
                 session,
