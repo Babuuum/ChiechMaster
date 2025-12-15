@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, computed_field
-
+from pathlib import Path
 
 class Settings(BaseSettings):
     # PROJECT
@@ -21,7 +21,9 @@ class Settings(BaseSettings):
     @property
     def database_url(self) -> str:
         if self.DEV_MODE:
-            return "sqlite+aiosqlite:///./dev.db"
+            base_dir = Path(__file__).parent.parent
+            db_path = base_dir / "dev.db"
+            return f"sqlite+aiosqlite:///{db_path.absolute().as_posix()}"
         else:
             return f"postgresql+asyncpg://{self.PROD_DB_USER}:{self.PROD_DB_PASSWORD}@{self.PROD_DB_HOST}:{self.PROD_DB_PORT}/{self.PROD_DB_NAME}"
 

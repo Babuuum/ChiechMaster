@@ -2,35 +2,59 @@ from aiogram.filters import Command
 from aiogram import Router
 from aiogram.types import Message
 
-from app.core.db.session import async_session
 from app.core.services.league_db_services import LeagueServices
-from app.ui_bot.messages.league import format_chiech_master_message
+from app.ui_bot.messages.league import format_league_message_markdown
 
 router = Router()
 
 
 @router.message(Command('chiech_master'))
 async def cmd_chiech_master(message: Message):
+    try:
+        leagues_list = await LeagueServices.get_actual_leagues()
 
-    leagues_list = LeagueServices
+        if not leagues_list:
+            await message.answer("Активные лиги не найдены.")
+            return
 
-    for league in leagues_list:
-        if not league:
-            await message.answer("Активная лига не найдена.")
+        for league in leagues_list:
+            formatted_message = format_league_message_markdown(
+                league,
+                league.goals,
+                league.big_goals,
+            )
 
+            # Если сообщение слишком длинное, разбиваем его
+            if len(formatted_message) > 4000:
+                # Разбиваем сообщение на части
+                parts = []
+                current_part = []
+                current_length = 0
 
-        formatted_message = format_chiech_master_message(
-            league.league_name,
-            league.legue_goals,
-            league.league_big_goals
-        )
+                for line in formatted_message.split('\n'):
+                    line_length = len(line)
+                    if current_length + line_length + 1 > 4000:  # +1 для символа новой строки
+                        parts.append('\n'.join(current_part))
+                        current_part = [line]
+                        current_length = line_length
+                    else:
+                        current_part.append(line)
+                        current_length += line_length + 1
 
-        await message.answer(
-            formatted_message,
-            parse_mode="HTML"
-        )
+                if current_part:
+                    parts.append('\n'.join(current_part))
 
+                # Отправляем части по очереди
+                for i, part in enumerate(parts):
+                    await message.answer(
+                        part,
+                        parse_mode="Markdown"
+                    )
+            else:
+                await message.answer(
+                    formatted_message,
+                    parse_mode="Markdown"
+                )
 
-#sdelat' toje samoe dl9 usera
-#potestit' s real'nimi dannimi
-#sdelat' refactoring
+    except Exception as e:
+        await message.answer(f"Произошла ошибка: {str(e)}")

@@ -32,3 +32,4 @@ async def cmd_start(message: Message):
         raise
     finally:
         await session.close()
+        #sprosit' y vani, vo3vrashaets9 ob'ekt klassa

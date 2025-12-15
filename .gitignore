@@ -26,3 +26,4 @@ dist/
 build/
 *.db
 *.sqlite3
+manual_tests/
